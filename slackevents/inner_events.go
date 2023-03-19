@@ -237,15 +237,16 @@ type SharedLinks struct {
 // TODO: Improve this so that it is not required to manually parse ChannelType
 type MessageEvent struct {
 	// Basic Message Event - https://api.slack.com/events/message
-	ClientMsgID     string `json:"client_msg_id"`
-	Type            string `json:"type"`
-	User            string `json:"user"`
-	Text            string `json:"text"`
-	ThreadTimeStamp string `json:"thread_ts"`
-	TimeStamp       string `json:"ts"`
-	Channel         string `json:"channel"`
-	ChannelType     string `json:"channel_type"`
-	EventTimeStamp  string `json:"event_ts"`
+	ClientMsgID     string  `json:"client_msg_id"`
+	Type            string  `json:"type"`
+	User            string  `json:"user"`
+	Text            string  `json:"text"`
+	ThreadTimeStamp string  `json:"thread_ts"`
+	TimeStamp       string  `json:"ts"`
+	Channel         string  `json:"channel"`
+	ChannelType     string  `json:"channel_type"`
+	EventTimeStamp  string  `json:"event_ts"`
+	Blocks          []Block `json:"blocks,omitempty"`
 
 	// When Message comes from a channel that is shared between workspaces
 	UserTeam   string `json:"user_team,omitempty"`
@@ -263,6 +264,7 @@ type MessageEvent struct {
 	BotID    string `json:"bot_id,omitempty"`
 	Username string `json:"username,omitempty"`
 	Icons    *Icon  `json:"icons,omitempty"`
+	// Blocks   []*slack.Block `json:"blocks,omitempty"`
 
 	Upload bool   `json:"upload"`
 	Files  []File `json:"files"`
@@ -528,6 +530,22 @@ func (e MessageEvent) IsEdited() bool {
 type TeamAccessGrantedEvent struct {
 	Type    string   `json:"type"`
 	TeamIDs []string `json:"team_ids"`
+}
+
+// Block type that is associatedwith a formatted message
+type Block struct {
+	Type    string `json:"type,omitempty"`
+	BlockID string `json:"block_id,omitempty"`
+	Text    struct {
+		Type     string `json:"type,omitempty"`
+		Text     string `json:"text,omitempty"`
+		Verbatim bool   `json:"verbatim,omitempty"`
+	} `json:"text,omitempty"`
+	Fields []struct {
+		Type     string `json:"type,omitempty"`
+		Text     string `json:"text,omitempty"`
+		Verbatim bool   `json:"verbatim,omitempty"`
+	} `json:"fields,omitempty"`
 }
 
 // TeamAccessRevokedEvent is sent if access to teams was revoked for your org-wide app.
